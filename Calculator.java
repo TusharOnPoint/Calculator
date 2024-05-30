@@ -1,5 +1,3 @@
-package Tushar;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +19,7 @@ class Calculator extends JFrame {
         setTitle("Calculator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        Font myFont = new Font("Arial", Font.PLAIN, 40);
 
         setSize(400, 600);
 
@@ -29,38 +28,38 @@ class Calculator extends JFrame {
         displayField.setBackground(Color.lightGray);
         displayField.setEditable(false);
         displayField.setHorizontalAlignment(JTextField.RIGHT);
-        displayField.setFont(new Font("Arial", Font.PLAIN, 40));
-        displayField.setPreferredSize(new Dimension(400, 80));
+        displayField.setFont(myFont);
+        displayField.setPreferredSize(new Dimension(360, 80));
         add(displayField, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 2, 2));
-        buttonPanel.setPreferredSize(new Dimension(400, 400));
+        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 3, 3));
+        buttonPanel.setPreferredSize(new Dimension(360, 400));
         buttonPanel.setBackground(Color.DARK_GRAY);
 
         numberButtons = new JButton[10];
         for (int i = 0; i < 10; i++) {
             numberButtons[i] = new JButton(String.valueOf(i));
-            numberButtons[i].setFont(new Font("Arial", Font.BOLD, 40));
+            numberButtons[i].setFont(myFont);
         }
 
         operatorButtons = new JButton[4];
         String[] operators = {"+", "-", "*", "/"};
         for (int i = 0; i < 4; i++) {
             operatorButtons[i] = new JButton(operators[i]);
-            operatorButtons[i].setFont(new Font("Arial", Font.BOLD, 40));
+            operatorButtons[i].setFont(myFont);
         }
 
         decimalButton = new JButton(".");
-        decimalButton.setFont(new Font("Arial", Font.BOLD, 40));
+        decimalButton.setFont(myFont);
 
-        deleteButton = new JButton("Del");
-        deleteButton.setFont(new Font("Arial", Font.BOLD, 40));
+        deleteButton = new JButton("D");
+        deleteButton.setFont(myFont);
 
         squareButton = new JButton("x²");
-        squareButton.setFont(new Font("Arial", Font.BOLD, 40));
+        squareButton.setFont(myFont);
 
         sqrtButton = new JButton("√");
-        sqrtButton.setFont(new Font("Arial", Font.BOLD, 40));
+        sqrtButton.setFont(myFont);
 
         buttonPanel.add(numberButtons[7]);
         buttonPanel.add(numberButtons[8]);
@@ -82,11 +81,11 @@ class Calculator extends JFrame {
         buttonPanel.add(sqrtButton);
 
         JButton clearButton = new JButton("C");
-        clearButton.setFont(new Font("Arial", Font.BOLD, 40));
+        clearButton.setFont(myFont);
         buttonPanel.add(clearButton);
 
         JButton equalsButton = new JButton("=");
-        equalsButton.setFont(new Font("Arial", Font.BOLD, 40));
+        equalsButton.setFont(myFont);
         buttonPanel.add(equalsButton);
 
         for (int i = 0; i < 10; i++) {
@@ -100,9 +99,23 @@ class Calculator extends JFrame {
 
         decimalButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!displayField.getText().contains(".")) {
-                    displayField.setText(displayField.getText() + ".");
+                //System.out.println(Calculator.this.operator);
+                if(Calculator.this.operator!=null)
+                {
+                    String[] operands = displayField.getText().split("\\Q" + Calculator.this.operator + "\\E");
+                    if (!operands[1].contains(".")) {
+                        displayField.setText(displayField.getText() + ".");
+                    }
+                    //System.out.println(operands[0]+" "+operands[1]);
                 }
+
+                else if(Calculator.this.operator==null)
+                {
+                    if (!displayField.getText().contains(".")) {
+                        displayField.setText(displayField.getText() + ".");
+                    }
+                }
+
             }
         });
 
@@ -120,7 +133,7 @@ class Calculator extends JFrame {
                 if (!displayField.getText().isEmpty() && !displayField.getText().equals("-")) {
                     num1 = Double.parseDouble(displayField.getText());
                     result = num1 * num1;
-                    displayField.setText(String.valueOf(result));
+                    displayField.setText(String.format("%.2f", result));
                 }
             }
         });
@@ -131,7 +144,7 @@ class Calculator extends JFrame {
                     num1 = Double.parseDouble(displayField.getText());
                     if (num1 >= 0) {
                         result = Math.sqrt(num1);
-                        displayField.setText(String.valueOf(result));
+                        displayField.setText(String.format("%.2f", result));
                     } else {
                         JOptionPane.showMessageDialog(Calculator.this, "Square root of negative number is not defined", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -188,7 +201,7 @@ class Calculator extends JFrame {
                                 }
                                 break;
                         }
-                        displayField.setText(String.valueOf(result));
+                        displayField.setText(String.format("%.2f", result));
                     } else {
                         JOptionPane.showMessageDialog(Calculator.this, "Invalid expression", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -201,10 +214,4 @@ class Calculator extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }
-
-    public static void main(String[] args) {
-        Calculator calculator = new Calculator();
-        calculator.setVisible(true);
-    }
-                        }
-                                     
+}
